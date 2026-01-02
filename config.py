@@ -2,8 +2,8 @@
 
 # Gmail Credentials
 # Note: Use an "App Password" instead of your regular password if you have 2FA enabled.
-GMAIL_USER = "c62994490@gmail.com"
-GMAIL_PASS = "Sahibdad670!"
+EA_EMAIL = "c62994490@gmail.com"
+EA_PASSWORD = "Sahibdad670!"
 
 # API Keys
 CEREBRAS_API_KEY = "csk-fthmtp5jrkfkjhfmvdtyjvkwx5jc95vnn8d5eenk42kkyxcw"

@@ -1,0 +1,32 @@
+
+Features to add:
+1. LOG IN KRTY WAQT KOI CHECK BOX AJAYE USKO USKO CHEK LIKE BOX ME KRDYA KRY CLICK LIKE I AGREE TO TERMS OF SERVICE TYPE CHECKBOX 
+2. log in ki jaga sign in dikhy to wo chla jaye aur sign in krne ke baad agr wo email password agya wo liikhy aur uske nechy bhi sign in he o usy wo kr skta click agr login nhi 
+captcha cloudflare wala masla he wo uska clear kryy (on the way)
+3. aur wo - waghera na likhy text me aur ai generated content na likhy pura human use kry, reply me accuracy nhi he(on the way)
+4. Log in krna agye he mostly platfroms pr ab masla ye ke posts nhi hoty hain main page pr waha categories hoty to categories ke andar ja kr wo posts dhundna seekhaye (solved)
+5. sign up kry aur gmail pr jaye aur waha se jo activation likk ya code aya wo dekhy  aur account complete bnade
+6. latest posts ko pehle reply kry like sbse ziada late  (solved)
+7. ensure kry ke reply like hoskta he neechy reply ka option he to phr ai se reply generate krwaya kry kbhi kbhar koi discussion waghera closed hoty he TO WO REPLY LIKHWA LETA HE JB  JATA HE NHI MILTA TO API KE CREDITS URTY HAIN (solved)
+
+
+URLS  I TESTED AND BOT CAN D O WARM UP EASILY
+
+https://discourse.webflow.com/ c62994490@gmail.com
+https://forum.cursor.com/ rao athar
+https://forum.ansible.com/ kmmmij022@gmail.com
+
+https://forum.arduino.cc/ kevin
+
+https://forum.freecodecamp.org/ raoathar670
+https://forum.modular.com/ kmmmij022@gmail.com
+
+
+will check
+https://forums.linuxmint.com/
+https://wordpress.org/support/forums/
+https://forums.mysql.com/
+
+https://forum.figma.com/
+
+https://discourse.mcneel.com/

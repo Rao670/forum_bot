@@ -997,3 +997,18 @@ Post ID: 150946
 URL: https://forum.cursor.com/t/claude-4-6-opus-out-now-fast-mode/150946/33
 Reply: Good point on the cost. Opus 4.6 actually saves money because you don't have to deal with the constant retries you get with cheaper models. If you're doing heavy refactoring, Sonnet tends to trip up a...
 --------------------------------------------------
+[2026-02-10 17:01:14] https://forum.cursor.com/
+Post ID: 151460
+URL: https://forum.cursor.com/t/api-pricing-transparency/151460
+Reply: [SKIPPED_AI_VERIFICATION_FAILED]...
+--------------------------------------------------
+[2026-02-10 17:03:25] forum.cursor.com
+Post ID: 151401
+URL: https://forum.cursor.com/t/we-have-opus-4-6-but-where-sonnet-5/151401
+Reply: Good point mascarock. Anthropic is still on the 3.5 architecture. That's why 4.5 or 5.0 aren't on any official APIs yet. The Cursor devs usually push those updates to the model picker as soon as Anthr...
+--------------------------------------------------
+[2026-02-10 17:09:32] forum.gitlab.com
+Post ID: 132703
+URL: https://forum.gitlab.com/t/devsecops-as-a-service-on-oracle-cloud-infrastructure-by-data-intensity/132703
+Reply: Good catch. This OCI setup is a great middle ground. It gives you all the control of a self-managed GitLab instance without the headache of patching or backups. For big teams on Oracle, it makes high ...
+--------------------------------------------------

@@ -2,7 +2,7 @@ name: Forum Bot Automation
 
 on:
   schedule:
-    - cron: '0 */6 * * *' # Har 6 ghantay baad chalega
+    - cron: '*/5 * * * *' # Har 6 ghantay baad chalega
   workflow_dispatch: # Manual chalane ke liye
 
 jobs:

@@ -1,0 +1,1 @@
+playwright\ngspread\noauth2client\nopenai\ngoogle-generativeai\nrequests

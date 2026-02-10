@@ -992,3 +992,8 @@ Post ID: 132687
 URL: https://forum.gitlab.com/t/i-have-gitlab-and-gitlab-runner-installed-on-a-machine-and-the-home-disk-is-almost-full-im-using-the-df-th-command-but-the-actual-repository-size-isnt-that-large/132687
 Reply: Hey @kiddingl, that gap between `df` and `du` usually means some big files were deleted but a process is still holding them open. That is why a restart clears it up for a bit. Try running `lsof +L1 /h...
 --------------------------------------------------
+[2026-02-10 16:00:35] forum.cursor.com
+Post ID: 150946
+URL: https://forum.cursor.com/t/claude-4-6-opus-out-now-fast-mode/150946/33
+Reply: Good point on the cost. Opus 4.6 actually saves money because you don't have to deal with the constant retries you get with cheaper models. If you're doing heavy refactoring, Sonnet tends to trip up a...
+--------------------------------------------------

@@ -1,1 +1,6 @@
-playwright\ngspread\noauth2client\nopenai\ngoogle-generativeai\nrequests
+playwright
+gspread
+oauth2client
+openai
+google-generativeai
+requests

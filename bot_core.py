@@ -207,7 +207,7 @@ class AutomationBot:
     # ================= Run Bot =================
     def run_platform_task(self, platform_url, platform_name="EA Forums"):
         with sync_playwright() as p:
-            browser = p.chromium.launch(headless=False)
+            browser = p.chromium.launch(headless=True)
             context = browser.new_context()
             page = context.new_page()
             page.goto(platform_url)

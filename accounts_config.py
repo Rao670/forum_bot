@@ -1,10 +1,10 @@
+import os
+import json
+
 # This file maps specific websites to specific Email accounts.
 # If a website is NOT listed here, the bot will use the default email from config.py
-# 
-# FORMAT OPTIONS:
-# 1. Simple: "website.com": "email@gmail.com" (Uses default password from config.py)
-# 2. Advanced: "website.com": {"email": "user@gmail.com", "password": "specific_password"}
 
+# Default accounts
 URL_ACCOUNTS = {
     # Glide Apps
     "community.glideapps.com": "kmmmij022@gmail.com",
@@ -31,7 +31,6 @@ URL_ACCOUNTS = {
     "devforum.zoom.us": {"email":"raoabdullah4054@gmail.com",
     "password":"Sahibdad670"},
 
-    
     # Unity
     "discussions.unity.com": "raoabdullah4054@gmail.com",
     
@@ -42,9 +41,15 @@ URL_ACCOUNTS = {
     "https://forum.shopware.com/": "alexhale4054@gmail.com",
     
     "https://forum.gitlab.com/": "raoathar670@gmail.com",
- 
-            
+    
     "https://forum.figma.com/": "raoathar670@gmail.com",        
     "https://forum.sketch.com/": "raoathar670@gmail.com",        
-
 }
+
+# Override with environment variable if available
+url_accounts_env = os.environ.get("URL_ACCOUNTS_JSON")
+if url_accounts_env:
+    try:
+        URL_ACCOUNTS.update(json.loads(url_accounts_env))
+    except:
+        pass

@@ -1475,7 +1475,7 @@ class HuggingFaceBot:
             # Use Persistent Context to save cookies and session data (builds reputation)
             context = p.chromium.launch_persistent_context(
                 user_data_dir=user_data_dir,
-                headless=False,
+                headless=True,
                 proxy={"server": proxy_server} if proxy_server else None,
                 args=[
                     '--disable-blink-features=AutomationControlled',

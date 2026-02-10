@@ -972,3 +972,23 @@ Post ID: 130626
 URL: https://forum.gitlab.com/t/removing-project-from-security-montoring-with-more-than-100-projects-set/130626
 Reply: Hey daso, that 100-project UI limit is definitely a pain. The best way around it is to use the GitLab GraphQL API instead. You can just use the `securityDashboardProjectRemove` mutation to target the ...
 --------------------------------------------------
+[2026-02-10 14:10:57] https://forum.gitlab.com/
+Post ID: 132515
+URL: https://forum.gitlab.com/t/empty-ai-catalog-in-gitlab-18-8-2-premium-missing-foundational-agents/132515
+Reply: [SKIPPED_SOLVED]...
+--------------------------------------------------
+[2026-02-10 14:11:13] https://forum.gitlab.com/
+Post ID: 130626
+URL: https://forum.gitlab.com/t/removing-project-from-security-montoring-with-more-than-100-projects-set/130626/4
+Reply: [ALREADY_REPLIED_DETECTED]...
+--------------------------------------------------
+[2026-02-10 14:11:29] https://forum.gitlab.com/
+Post ID: 106921
+URL: https://forum.gitlab.com/t/get-rid-of-migrate-to-gitlab-ci-cd-from-jenkins-banner/106921/2
+Reply: [SKIPPED_AI_VERIFICATION_FAILED]...
+--------------------------------------------------
+[2026-02-10 14:14:53] forum.gitlab.com
+Post ID: 132687
+URL: https://forum.gitlab.com/t/i-have-gitlab-and-gitlab-runner-installed-on-a-machine-and-the-home-disk-is-almost-full-im-using-the-df-th-command-but-the-actual-repository-size-isnt-that-large/132687
+Reply: Hey @kiddingl, that gap between `df` and `du` usually means some big files were deleted but a process is still holding them open. That is why a restart clears it up for a bit. Try running `lsof +L1 /h...
+--------------------------------------------------

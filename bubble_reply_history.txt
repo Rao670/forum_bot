@@ -1012,3 +1012,18 @@ Post ID: 132703
 URL: https://forum.gitlab.com/t/devsecops-as-a-service-on-oracle-cloud-infrastructure-by-data-intensity/132703
 Reply: Good catch. This OCI setup is a great middle ground. It gives you all the control of a self-managed GitLab instance without the headache of patching or backups. For big teams on Oracle, it makes high ...
 --------------------------------------------------
+[2026-02-11 01:26:16] https://forum.cursor.com/
+Post ID: 151461
+URL: https://forum.cursor.com/t/documentation-page-schema-undocumented-for-rules/151461
+Reply: [SKIPPED_AI_VERIFICATION_FAILED]...
+--------------------------------------------------
+[2026-02-11 01:27:33] forum.cursor.com
+Post ID: 132271
+URL: https://forum.cursor.com/t/need-help-to-move-codex-to-right-side-secondary-bar/132271
+Reply: Hey Aleksandr_Strizhevsk, it sounds like your layout just got toggled off. You can fix it by going to **View > Appearance** and clicking **Show Activity Bar**. To get those side panels back, just enab...
+--------------------------------------------------
+[2026-02-11 01:35:01] forum.gitlab.com
+Post ID: 132712
+URL: https://forum.gitlab.com/t/printing-markdown/132712
+Reply: Hey Pinter, if you want that exact look, the best way is to use the GitLab API `/markdown` endpoint to get your HTML first. Then, you can use a tool like `md-to-pdf` and just link GitLab's official [P...
+--------------------------------------------------

@@ -249,7 +249,7 @@ class HuggingFaceBot:
             if attempt % 3 == 0: print(f"  ... scrolling deeper (Attempt {attempt+1})")
         return last_height
 
-        def verify_post_on_page(self, page, current_username, ai_reply):
+    def verify_post_on_page(self, page, current_username, ai_reply):
         """
         Antigravity Component 4: GitLab/General Verification Fix
         Extended wait and re-verify steps to handle slow-loading posts.
@@ -634,7 +634,7 @@ class HuggingFaceBot:
     # ===========================
     # Robust login with retry
     # ===========================
-        def login_huggingface(self, page, platform_url):
+    def login_huggingface(self, page, platform_url):
         """
         Adaptive Login Strategy with Antigravity Component 1: Login Checkbox Fix
         """

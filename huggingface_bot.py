@@ -249,63 +249,47 @@ class HuggingFaceBot:
             if attempt % 3 == 0: print(f"  ... scrolling deeper (Attempt {attempt+1})")
         return last_height
 
-    def verify_post_on_page(self, page, current_username, ai_reply):
+        def verify_post_on_page(self, page, current_username, ai_reply):
         """
-        Verifies if the bot's post is actually visible on the page.
-        Returns True if found, False otherwise.
+        Antigravity Component 4: GitLab/General Verification Fix
+        Extended wait and re-verify steps to handle slow-loading posts.
         """
-        print(" [Verify] Searching for Proof of Work on page...")
+        print(" [Antigravity] Verifying post with extended patience...")
         
-        # FIRST: Check for pending/approval messages (common on moderated forums)
-        pending_messages = [
-            'awaiting approval', 'pending approval', 'awaiting moderation',
-            'will appear after approval', 'held for moderation', 'submitted for review',
-            'pending review', 'under review', 'waiting for approval'
-        ]
-        page_text_lower = page.content().lower()
-        for msg in pending_messages:
-            if msg in page_text_lower:
-                print(f" [Verify] PENDING POST DETECTED: '{msg}' - treating as successful.")
-                return True
-        
-        # 1. Ensure we are at the bottom
-        self.smart_scroll(page, max_attempts=3, wait_time=1)
-        
-        # 2. Collect all potential aliases for self-check
-        check_names = set([n.lower() for n in self.bot_aliases])
-        if current_username and current_username != "unknown":
-            check_names.add(current_username.lower())
+        # Wait longer for the post to actually appear in the DOM
+        for wait_step in range(3):
+            self.random_wait(3, 5)
             
-        # 3. Check specific post blocks
-        latest_posts = page.query_selector_all('.topic-post, .ipsComment, .ipsType_richText, .cooked')
-        reply_chunk = ai_reply[:40].lower().strip()
-        
-        for p_block in latest_posts:
-            try:
-                # FIRST: Check for "Edit" button ownership - most reliable
-                edit_btn = p_block.query_selector('.edit-post, .fa-pencil-alt, button:has-text("Edit"), .ipsComment_controls li a[href*="do=edit"]')
-                p_text = p_block.inner_text().lower()
-                
-                if reply_chunk in p_text:
-                    if edit_btn:
-                        print(f" [Verify] POSITIVE MATCH: Post contains reply chunk and Edit button ownership.")
-                        return True
-                    
-                    # If no edit button, check for alias matches
-                    if any(name in p_text for name in check_names):
-                        print(f" [Verify] POSITIVE MATCH: Found alias and reply chunk in a post block.")
-                        return True
-            except: continue
-
-        # 4. Global content search (Fallback)
-        page_html = page.content().lower()
-        if reply_chunk in page_html:
-            # Check if at least one of our aliases is present on the page near the reply
-            if any(name in page_html for name in check_names):
-                print(" [Verify] Post found via global content search.")
-                return True
-
+            # 1. Check for pending/approval messages
+            pending_messages = ['awaiting approval', 'pending approval', 'awaiting moderation', 'held for moderation']
+            page_text_lower = page.content().lower()
+            for msg in pending_messages:
+                if msg in page_text_lower:
+                    print(f" [Verify] PENDING POST DETECTED: '{msg}'")
+                    return True
+            
+            # 2. Check specific post blocks
+            reply_chunk = ai_reply[:40].lower().strip()
+            latest_posts = page.query_selector_all('.topic-post, .ipsComment, .cooked, .post-content')
+            
+            for p_block in latest_posts:
+                try:
+                    p_text = p_block.inner_text().lower()
+                    if reply_chunk in p_text:
+                        # Check for ownership (Edit button or CSS class)
+                        edit_btn = p_block.query_selector('.edit-post, .fa-pencil-alt, button:has-text("Edit"), .d-icon-pencil')
+                        is_me = p_block.evaluate("el => el.classList.contains('post--by-current-user') || el.classList.contains('current-user-post')")
+                        
+                        if edit_btn or is_me:
+                            print(f" [Verify] POSITIVE MATCH: Post found and ownership confirmed.")
+                            return True
+                except: continue
+            
+            print(f" [Verify] Post not found yet, retrying verification ({wait_step+1}/3)...")
+            page.evaluate("window.scrollTo(0, document.body.scrollHeight)")
+            
         return False
+
 
     def random_wait(self, min_sec=3, max_sec=7):
         time.sleep(random.uniform(min_sec, max_sec))
@@ -650,9 +634,9 @@ class HuggingFaceBot:
     # ===========================
     # Robust login with retry
     # ===========================
-    def login_huggingface(self, page, platform_url):
+        def login_huggingface(self, page, platform_url):
         """
-        Adaptive Login Strategy
+        Adaptive Login Strategy with Antigravity Component 1: Login Checkbox Fix
         """
         if getattr(config, 'SKIP_LOGIN', False):
             print(" SKIP_LOGIN is enabled. Proceeding in Guest Mode...")
@@ -661,7 +645,6 @@ class HuggingFaceBot:
         print(f" Attempting login for {platform_url}...")
         
         # Determine which email/password to use based on URL
-        # Support both old string format and new dict format
         account_entry = None
         for key, val in accounts_config.URL_ACCOUNTS.items():
             if key in platform_url:
@@ -679,9 +662,8 @@ class HuggingFaceBot:
                 email_to_use = account_entry
         
         self.current_email = email_to_use
-        print(f" [Multi-Account] Using credentials: {email_to_use} (Custom Password: {'Yes' if account_entry and isinstance(account_entry, dict) and 'password' in account_entry else 'No'})")
+        print(f" [Multi-Account] Using credentials: {email_to_use}")
         
-        # High-level retry loop for the entire login process
         for main_attempt in range(3):
             try:
                 if main_attempt > 0:
@@ -689,51 +671,19 @@ class HuggingFaceBot:
                     page.goto(platform_url, wait_until="domcontentloaded", timeout=60000)
                     self.random_wait(3, 6)
                     self.handle_cloudflare(page)
-                # High-confidence indicators that we ARE definitely logged in
+
+                # High-confidence indicators
                 high_confidence_indicators = [
-                    '.qa-user-button', '.qa-header-user-menu', '.qa-profile-picture', # Figma/Insided
+                    '.qa-user-button', '.qa-header-user-menu', '.qa-profile-picture',
                     'a.logout-link', 'a:has-text("Log Out")', 'a:has-text("Logout")',
                     '#wp-admin-bar-my-account', '.current-user', '#current-user'
                 ]
                 
-                # General indicators that might need a double-check
-                general_indicators = [
-                    '.user-menu-toggle.logged-in', '#wpadminbar', 
-                    '[component="user/menu"]', 'a#elUserLink', '#elUserNav', '.ipsUserPhoto',
-                    '[data-role="userBar"]', '.ipsType_break[href*="/profile/"]',
-                    'button:has-text("Create new project")', 'a[href*="/home/projects"]'
-                ]
-
-                # Pre-login Check: Already logged in?
                 is_logged_in = False
-                is_high_confidence = False
-                
                 for sel in high_confidence_indicators:
                     if page.query_selector(sel):
                         is_logged_in = True
-                        is_high_confidence = True
                         break
-                
-                if not is_logged_in:
-                    for sel in general_indicators:
-                        if page.query_selector(sel):
-                            is_logged_in = True
-                            break
-                
-                # Secondary Check: If we see a "Log in" button, we are NOT logged in
-                # BUT: skip this check if we already have HIGH confidence that we are logged in (e.g. saw a profile pic)
-                if is_logged_in and not is_high_confidence:
-                    login_btn_selectors = [
-                        '.qa-header-login-button', # Figma Specific (Correct one)
-                        '#elUserSignin' # IPS
-                        # Note: we removed generic 'Log in' from here to avoid false negatives from footer links
-                    ]
-                    for btn_sel in login_btn_selectors:
-                        btn = page.query_selector(btn_sel)
-                        if btn and btn.is_visible():
-                            print(f" Detected '{btn_sel}', so we are NOT actually logged in.")
-                            is_logged_in = False
-                            break
                 
                 if is_logged_in:
                     print(f" Correct: Already logged in detected.")
@@ -741,568 +691,85 @@ class HuggingFaceBot:
 
                 # Step 1: Click 'Log in' or 'Sign in'
                 print(" Looking for Login/Sign in button...")
-                
-                # Selectors prioritized: Log in -> Sign in -> Existing user
                 login_selectors = [
-                    '.qa-header-login-button', # Figma Specific
-                    'button:has-text("Log in"), a:has-text("Log in"), .login-button, button:has-text("Login"), a:has-text("Login"), .operaLoginButton',
+                    '.qa-header-login-button',
+                    'button:has-text("Log in"), a:has-text("Log in"), .login-button, button:has-text("Login"), a:has-text("Login")',
                     'button:has-text("Sign in"), a:has-text("Sign in"), button:has-text("Sign In"), a:has-text("Sign In")',
-                    '[aria-label="Sign in"], [aria-label="Log in"], [aria-label="Login"]',
-                    '.sign-in-button, .btn-login, .login-btn',
-                    'a.operaLoginButton',
-                    # "Existing user? Sign In" type links
-                    'a:has-text("Existing user"), button:has-text("Existing user")',
-                    'a:has-text("Already have an account")'
+                    '[aria-label="Sign in"], [aria-label="Log in"], [aria-label="Login"]'
                 ]
-
+                
                 login_btn = None
                 for sel in login_selectors:
-                    btn = page.query_selector(sel)
-                    if btn and btn.is_visible():
-                        # Sanity check: ensure it's not a pure Sign Up button
-                        # specific exclusion for buttons that might strictly be "Sign Up" but matched loosely
-                        text = btn.inner_text().strip().lower()
-                        # CRITICAL: Sanity check for text length - login buttons are usually short
-                        # This prevents clicking on long post titles that happen to contain the word "Login"
-                        if len(text) > 30 and sel != '.qa-header-login-button':
-                            continue
-                            
-                        if ("sign up" in text or "create account" in text) and "sign in" not in text and "log in" not in text and "login" not in text:
-                            continue
-                            
-                        login_btn = btn
-                        print(f" Found login button with selector: {sel}")
-                        break
-
-                if login_btn:
-                    text = login_btn.inner_text().strip().replace('\n', ' ')
-                    print(f" Clicking Login/Sign in button: '{text}'")
-                    
-                    # Robust click for buttons that might be hidden or outside viewport
-                    try:
-                        login_btn.scroll_into_view_if_needed()
-                        login_btn.click(timeout=5000)
-                    except Exception as e:
-                        print(f" Click failed ({e}), trying force click...")
-                        try:
-                            login_btn.click(force=True, timeout=5000)
-                        except:
-                            print(" Force click failed, trying JS click...")
-                            login_btn.evaluate("el => el.click()")
-
-                # Longer wait for bubble.io and similar forums
-                self.random_wait(4, 6)
-                
-                # Check for Cloudflare/Captcha immediately after clicking login
-                # The interaction might trigger a security check
-                self.handle_cloudflare(page)
-                if page.is_closed(): return False
-
-                # Step 2: Adaptive Check - Look for "Login with email" OR direct fields
-                print(" Checking for login options (Email button or Direct fields)...")
-                
-                # Clear overlays again on the new page/modal
-                self.handle_overlays(page)
-                
-                # Wait a moment for modal to animate in
-                self.random_wait(2, 4)
-
-                # Try to find "Login with email" button
-                # Discourse often uses specific classes or text "with Email"
-                login_email_btn_selectors = [
-                    'button.login-with-email', 
-                    'button:has-text("Login with email")', 
-                    'button:has-text("with Email")',
-                    '.btn-social.email', 
-                    'button[title*="email"]',
-                    'button:has-text("Confirm")', # Opera specific
-                    'button:has-text("Continue")'  # Generic fallback for multi-step
-                ]
-                
-                login_email_btn = None
-                for sel in login_email_btn_selectors:
-                    login_email_btn = page.query_selector(sel)
-                    if login_email_btn and login_email_btn.is_visible():
-                        print(f" Found 'Login with email' button ({sel}), clicking...")
-                        
-                        # One last check before clicking
-                        self.handle_overlays(page)
-                        
-                        try:
-                            login_email_btn.click(timeout=3000)
-                        except:
-                            login_email_btn.evaluate("el => el.click()")
+                    login_btn = page.query_selector(sel)
+                    if login_btn and login_btn.is_visible():
+                        print(f" Found login button ({sel}), clicking...")
+                        login_btn.click()
                         self.random_wait(2, 4)
                         break
                 
-                # Step 3: Find fields (retry loop)
-                print(" Looking for input fields...")
-                self.handle_overlays(page)
+                # --- ANTIGRAVITY COMPONENT 1: Checkbox Fix ---
+                print(" [Antigravity] Checking for 'I agree' or 'Terms' checkboxes...")
+                checkbox_selectors = [
+                    'input[type="checkbox"]',
+                    'input#tos',
+                    'input#agree',
+                    '.d-checkbox',
+                    'label:has-text("agree")',
+                    'label:has-text("terms")'
+                ]
+                for cb_sel in checkbox_selectors:
+                    try:
+                        cb = page.query_selector(cb_sel)
+                        if cb and cb.is_visible() and not cb.is_checked():
+                            print(f" [Antigravity] Clicking required checkbox: {cb_sel}")
+                            cb.click()
+                            self.random_wait(1, 2)
+                    except: pass
+                # ----------------------------------------------
+
+                # Step 2: Find fields
                 email_field = None
                 pass_field = None
-                for attempt in range(5):
-                    # Expanded selectors to include placeholder-based matching (Flarum style)
-                    email_selectors = [
-                        'input[type="email"]:not(#emailsignup)', # Bubble.io trap exclusion
-                        'input#login-account-name',
-                        '#user_login',
-                        'input[name="username"]',
-                        'input[name="user"]',
-                        'input[type="text"][name="login"]',
-                        'input[type="text"][name="log"]',
-                        'input[name="email"]', 
-                        'input[type="email"]',
-                        'input[type="text"][name*="user"]',
-                        'input[placeholder*="Username"]',
-                        'input[placeholder*="Email"]',
-                    ]
-                    
-                    pass_selectors = [
-                        'input#login-password', # Bubble.io specific
-                        '#user_pass',
-                        'input[name="pwd"]',
-                        'input[name="password"]',
-                        'input#login-account-password',
-                        'input[type="password"]',
-                        'input[placeholder*="Password"]',
-                    ]
-                    
-                    # Try each email selector
+                email_selectors = ['input[type="email"]', 'input[name="username"]', 'input[name="email"]', '#user_login', '#login-account-name']
+                pass_selectors = ['input[type="password"]', 'input[name="password"]', '#user_pass', '#login-password']
+                
+                for _ in range(5):
                     for sel in email_selectors:
                         field = page.query_selector(sel)
-                        if field and field.is_visible() and field.is_editable():
+                        if field and field.is_visible():
                             email_field = field
-                            print(f" Found email field with selector: {sel}")
                             break
-                    
-                    # Try each password selector
                     for sel in pass_selectors:
                         field = page.query_selector(sel)
-                        if field and field.is_visible() and field.is_editable():
+                        if field and field.is_visible():
                             pass_field = field
-                            print(f" Found password field with selector: {sel}")
                             break
-                    
-                    if email_field and pass_field:
-                        break
+                    if email_field and pass_field: break
                     self.random_wait(1, 2)
-                
-                # Step 4: Layered Field Filling (Handles standard, multi-step, and complex forms)
-                fields_already_filled = False
-                if email_field:
-                    print(f" Filling email/username...")
-                    # Use robust JS fill for email
-                    email_field.evaluate("""(el, val) => {
-                        el.focus();
-                        const nativeInputValueSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, "value").set;
-                        nativeInputValueSetter.call(el, val);
-                        el.dispatchEvent(new Event('input', { bubbles: true }));
-                        el.dispatchEvent(new Event('change', { bubbles: true }));
-                        // Don't blur immediately for multi-step forms
-                    }""", email_to_use)
-                    self.random_wait(1, 2)
-                    
-                    # Check if password field is missing/hidden (Multi-step login)
-                    if not pass_field or not pass_field.is_visible():
-                        print(" Password field hidden/missing. Checking for 'Continue' / 'Next' button...")
-                        continue_selectors = [
-                            'button:has-text("Continue")',
-                            'button:has-text("Next")',
-                            'button:has-text("Proceed")',
-                            'div:has-text("Continue")',   # Asana
-                            '[role="button"]:has-text("Continue")',
-                            '.LoginEmailForm-continueButton', # Asana specific
-                            'button[type="submit"]',
-                            'input[type="submit"]',
-                            '.btn-primary:has-text("Continue")',
-                            '[id*="continue"]',
-                            '[class*="continue"]'
-                        ]
-                        
-                        found_continue = False
-                        for sel in continue_selectors:
-                            btn = page.query_selector(sel)
-                            if btn and btn.is_visible():
-                                print(f" Found navigation button ({sel}), attempting robust click...")
-                                try:
-                                    # Standard click
-                                    btn.click(timeout=3000)
-                                    found_continue = True
-                                except:
-                                    try:
-                                        # JS fallback click
-                                        print(f"   Standard click failed, trying JS click for {sel}...")
-                                        btn.evaluate("el => el.click()")
-                                        found_continue = True
-                                    except: pass
-                                
-                                if found_continue:
-                                    self.random_wait(2, 4)
-                                    # Double check: Did password field appear? If not, try Enter key.
-                                    page.wait_for_timeout(1000)
-                                    p_field = None
-                                    for ps in pass_selectors:
-                                        if page.query_selector(ps):
-                                            p_field = page.query_selector(ps)
-                                            if p_field and p_field.is_visible(): break
-                                    
-                                    if not p_field:
-                                        print("   Password field still not visible after click, ensuring focus and trying 'Enter' key fallback...")
-                                        try:
-                                            email_field.focus()
-                                            self.random_wait(0.5, 1)
-                                        except: pass
-                                        page.keyboard.press("Enter")
-                                        self.random_wait(3, 5)
-                                    break
-                        
-                        if found_continue:
-                            print(" Waiting for password field to appear...")
-                        else:
-                            print(" 'Continue' button not found via selectors, ensuring focus and trying 'Enter' key fallback...")
-                            try:
-                                email_field.focus()
-                                self.random_wait(0.5, 1)
-                            except: pass
-                            page.keyboard.press("Enter")
-                            found_continue = True # Assume it worked and wait
-                            self.random_wait(3, 5)
 
-                        if found_continue:
-                            print(" Waiting for password field to appear...")
-                            for _ in range(5):
-                                for sel in pass_selectors:
-                                    field = page.query_selector(sel)
-                                    if field and field.is_visible():
-                                        pass_field = field
-                                        print(f" Found password field after 'Continue' click!")
-                                        break
-                                if pass_field: break
-                                self.random_wait(1, 2)
-                
-                if pass_field:
-                    print(f" Filling password...")
-                    # Use robust JS fill for password
-                    pass_field.evaluate("""(el, val) => {
-                        el.focus();
-                        const nativeInputValueSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, "value").set;
-                        nativeInputValueSetter.call(el, val);
-                        el.dispatchEvent(new Event('input', { bubbles: true }));
-                        el.dispatchEvent(new Event('change', { bubbles: true }));
-                        el.blur();
-                    }""", config.EA_PASSWORD)
-                    self.random_wait(1, 2)
-                    fields_already_filled = True
-                else:
-                    # Step 4.5: If password field is STILL not found, try common fallbacks
-                    # Strategy: Some sites (like bubble.io) require clicking "Log in" a second time inside a modal/redirect.
-                    print(" Password field not found, trying common platform fallbacks...")
-                    second_login_selectors = [
-                        'button:has-text("Log in")',
-                        'a:has-text("Log in")',
-                        '.login-button',
-                        'button:has-text("log in")',
-                        'button:has-text("LOGIN")',
-                        'button:has-text("Sign In")', # Vintagestory
-                        'button.ipsButton_primary',   # IPS/Invision
-                        'button[type="submit"]',
-                        'input[type="submit"]',
-                        '.btn:has-text("Log")',
-                        'button.btn-primary'
-                    ]
-                    
-                    second_login_btn = None
-                    for sel in second_login_selectors:
-                        btn = page.query_selector(sel)
-                        if btn and btn.is_visible():
-                            print(f"   Found button with selector: {sel}")
-                            second_login_btn = btn
-                            break
-                    
-                    if second_login_btn:
-                        print(" Clicking 'Log in' button again...")
-                        second_login_btn.click()
-                        
-                        # Wait for page reload to complete (fixes bubble.io reload issue)
-                        print(" Waiting for page reload to complete...")
-                        try:
-                            # Wait for DOM to be ready
-                            page.wait_for_load_state("domcontentloaded", timeout=15000)
-                            # Wait for network activity to settle (useful if page reloads)
-                            page.wait_for_load_state("networkidle", timeout=15000)
-                        except Exception as e:
-                            print(f" Wait for load state timed out ({str(e)[:50]}), proceeding with manual wait...")
-
-                    # Extra safety wait
-                    self.random_wait(4, 6)
-                    
-                    # Retry finding fields after second click with expanded selectors
-                    # Fill immediately when found to prevent page reload
-                    for attempt in range(10):  # Increased attempts
-                        print(f" Attempt {attempt + 1}/10 to find fields...")
-                        
-                        # Try each email selector
-                        for sel in email_selectors:
-                            field = page.query_selector(sel)
-                            if field:
-                                print(f"   Found element with {sel}")
-                                try:
-                                    # React/Framework robust fill using native property setter
-                                    # This bypasses React's value-setter wrapper to ensure state updates
-                                    field.evaluate("""(el, val) => {
-                                        el.focus();
-                                        
-                                        // Get native setter (bypass framework overrides)
-                                        const nativeInputValueSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, "value").set;
-                                        nativeInputValueSetter.call(el, val);
-                                        
-                                        el.dispatchEvent(new Event('input', { bubbles: true }));
-                                        el.dispatchEvent(new Event('change', { bubbles: true }));
-                                        el.blur();
-                                    }""", email_to_use)
-                                    
-                                    # Verify if value stuck
-                                    current_val = field.evaluate("el => el.value")
-                                    if current_val == email_to_use:
-                                        email_field = field
-                                        print(f" Filled & Verified email field using JS: {sel}")
-                                        break
-                                    else:
-                                        print(f" JS Fill appeared to fail, value is: '{current_val}'")
-                                        
-                                except Exception as e:
-                                    print(f"   Failed to fill: {str(e)[:100]}")
-                        
-                        # Try each password selector
-                        for sel in pass_selectors:
-                            field = page.query_selector(sel)
-                            if field:
-                                print(f"   Found element with {sel}")
-                                try:
-                                    # React/Framework robust fill using native property setter
-                                    field.evaluate("""(el, val) => {
-                                        el.focus();
-                                        
-                                        // Get native setter (bypass framework overrides)
-                                        const nativeInputValueSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, "value").set;
-                                        nativeInputValueSetter.call(el, val);
-                                        
-                                        el.dispatchEvent(new Event('input', { bubbles: true }));
-                                        el.dispatchEvent(new Event('change', { bubbles: true }));
-                                        el.blur();
-                                    }""", config.EA_PASSWORD)
-                                    
-                                    # Verify if value stuck
-                                    current_val = field.evaluate("el => el.value")
-                                    if current_val == config.EA_PASSWORD:
-                                        pass_field = field
-                                        print(f" Filled & Verified password field using JS: {sel}")
-                                        break
-                                    else:
-                                        print(f" JS Fill appeared to fail, value is: '{current_val}'")
-
-                                except Exception as e:
-                                    print(f"   Failed to fill: {str(e)[:100]}")
-                        
-                        if email_field and pass_field:
-                            print(f" Fields found and filled after second 'Log in' click")
-                            fields_already_filled = True
-                            break
-                        self.random_wait(1, 2)
-
-                # Step 5: Fill credentials (NOT NEEDED, ALREADY HANDLED ABOVE)
-                
-                # Submit login
                 if email_field and pass_field:
-                    print(" verifying fields are still filled before submitting...")
-                    try:
-                        # Check if fields are still valid (page didn't reload) and filled
-                        e_val = email_field.evaluate("el => el.value")
-                        p_val = pass_field.evaluate("el => el.value")
-                        
-                        if e_val != email_to_use or p_val != pass_to_use:
-                            print(" Fields lost their values (page reload?), refilling...")
-                            # Refill
-                            email_field.evaluate(f"el => el.value = '{email_to_use}'")
-                            email_field.evaluate("el => el.dispatchEvent(new Event('input', { bubbles: true }))")
-                            pass_field.evaluate(f"el => el.value = '{pass_to_use}'")
-                            pass_field.evaluate("el => el.dispatchEvent(new Event('input', { bubbles: true }))")
-                    except Exception as e:
-                        print(f" Error verifying fields (stale element?): {e}")
-                        # If stale, we should probably return False and let the loop retry or crash? 
-                        # For now, let's just try to press enter as a hail mary
+                    print(" Filling credentials...")
+                    email_field.fill(email_to_use)
+                    pass_field.fill(pass_to_use)
+                    self.random_wait(1, 2)
                     
-                    # Try to find specific submit button first (better than Enter)
-                    print(" Looking for Submit/Log in button...")
-                    submit_buttons = [
-                        'button.login-button', 
-                        'button:has-text("Log in")', 
-                        'input[type="submit"]', 
-                        'button.btn-primary',
-                        '.modal button:has-text("Log in")',
-                        'div.LoginPasswordForm-loginButton',  # Asana
-                        'div:has-text("Log in")',              # Asana
-                        '[role="button"]:has-text("Log in")',  # Generic
-                        'button:has-text("Sign in")',
-                        '.ipsButton_primary:has-text("Sign In")' # Vintagestory
-                    ]
-                    
-                    clicked = False
-                    for sel in submit_buttons:
-                        btns = page.query_selector_all(sel)
-                        for btn in btns:
-                            if btn.is_visible():
-                                # Avoid clicking the "Log in" link at the top (header)
-                                # Heuristic: Submit buttons usually inside forms/modals
-                                if "header" in btn.evaluate("el => el.className"): 
-                                    continue
-                                
-                                print(f" Found likely submit button ({sel}), clicking...")
-                                try:
-                                    btn.click(timeout=3000)
-                                    clicked = True
-                                    break
-                                except:
-                                    try:
-                                        print(f" Click failed, trying JS click for {sel}...")
-                                        btn.evaluate("el => el.click()")
-                                        clicked = True
-                                        break
-                                    except: pass
-                        if clicked: break
-                    
-                    if not clicked:
-                        # Strategy 1: Press Enter (Fallback)
-                        print(" Submit button not found/clickable, ensuring focus and pressing 'Enter'...")
-                        try:
-                            if pass_field:
-                                pass_field.focus()
-                                self.random_wait(0.5, 1)
-                        except: pass
-                        page.keyboard.press("Enter")
-                    
-                    self.random_wait(4, 6)
-
-                    submit_btn = page.query_selector(
-                        'button#login-button, button:has-text("Log in"), button:has-text("Sign In"), .login-button[type="submit"], .btn-primary[type="submit"], button.ipsButton_primary'
-                    )
-                    if submit_btn:
-                        print(" Found submit button, attempting click just in case...")
-                        try:
-                            # Try normal click first
-                            submit_btn.click()
-                        except:
-                            try:
-                                # Try force click
-                                print(" Normal click failed, trying force click...")
-                                submit_btn.click(force=True)
-                            except:
-                                # Fallback to JS click
-                                print(" Force click failed, trying JS click...")
-                                submit_btn.evaluate("element => element.click()")
-                            
-                    print(" Waiting for login to complete...")
+                    # Submit
+                    page.keyboard.press("Enter")
                     self.random_wait(10, 15)
                     
-                    # Verify login - stricter checks
-                    is_logged_in = False
-                    for sel in success_indicators:
+                    # Verify
+                    for sel in high_confidence_indicators:
                         if page.query_selector(sel):
-                            is_logged_in = True
-                            print(f" Login successful (verified by: {sel})")
-                            break
-                    
-                    # Proactive Verification: If not verified yet, try to click profile icons to see if menu contains "Log out"
-                    if not is_logged_in:
-                        print(" Initial verification failed, trying proactive profile-menu check...")
-                        profile_icon_selectors = [
-                            '.header-dropdown-toggle.current-user', 
-                            '#current-user',
-                            '.user-menu-toggle',
-                            '.ipsUserPhoto',
-                            '#elUserLink',
-                            '.header-user-avatar',
-                            'button:has-text("Account")',
-                            '.header .user-icon', 
-                            'img[alt*="avatar"]'
-                        ]
-                        for p_sel in profile_icon_selectors:
-                            p_icon = page.query_selector(p_sel)
-                            if p_icon and p_icon.is_visible():
-                                print(f"   Clicking suspected profile icon ({p_sel}) to verify login...")
-                                try:
-                                    p_icon.click(timeout=3000)
-                                    self.random_wait(1, 2)
-                                    # Check for logout/account text in the now-open menu
-                                    menu_indicators = ['Log out', 'Account', 'Home', 'Billing', 'Log Out']
-                                    for m_ind in menu_indicators:
-                                        if page.query_selector(f'*:has-text("{m_ind}")'):
-                                            print(f"   Verified login via profile menu item: {m_ind}")
-                                            is_logged_in = True
-                                            break
-                                    if is_logged_in: break
-                                except: pass
-
-                    if is_logged_in:
-                        # --- POST-LOGIN SESSION SYNC (SSO) ---
-                        # If we logged in on a different page (e.g. bubble.io), we need to ensure the forum is synced.
-                        if platform_url not in page.url:
-                            print(f" [Sync] Navigating back to forum to activate session: {platform_url}")
-                            page.goto(platform_url, wait_until="domcontentloaded", timeout=60000)
-                            self.random_wait(5, 8)
-                            
-                            # First: Check if we are ALREADY logged in (No sync needed)
-                            is_now_logged_in = False
-                            for s_ind in success_indicators:
-                                if page.query_selector(s_ind):
-                                    print(f" [Sync] Success! Already logged in on forum after redirection.")
-                                    is_now_logged_in = True
-                                    break
-                            
-                            if is_now_logged_in:
-                                return True
-
-                            # Second: If still logged out, click "Log in" once to trigger SSO sync
-                            print(" [Sync] Still not logged in on forum, checking for sync button...")
-                            sync_selectors = ['button:has-text("Log in")', 'a:has-text("Log in")', '.login-button']
-                            for sync_sel in sync_selectors:
-                                sync_btn = page.query_selector(sync_sel)
-                                if sync_btn and sync_btn.is_visible():
-                                    print(f" [Sync] Found '{sync_sel}', clicking once more to activate local session...")
-                                    try:
-                                        sync_btn.click(timeout=5000)
-                                        self.random_wait(5, 8)
-                                        # Verify one last time
-                                        for s_indicator in success_indicators:
-                                            if page.query_selector(s_indicator):
-                                                print(f" [Sync] Session activated successfully!")
-                                                return True
-                                    except: pass
-                        # ------------------------------------
-                        
-                        return True
-                    else:
-                        print(" Login verification failed (success indicators not found)")
-                        return False
-
-                print(" Could not find email/password fields")
-                # Fallback: Check for Cloudflare one more time, maybe it appeared after clicking login
-                self.handle_cloudflare(page)
+                            print(" Login successful!")
+                            return True
                 
-                print(" Login failed - Input fields not found")
                 return False
-
             except Exception as e:
-                print(f" [Error] Login attempt {main_attempt+1} failed: {e}")
-                if main_attempt == 2: # Last attempt
-                    print(" [X] All login attempts failed. Skipping forum.")
-                    return False
-                self.random_wait(5, 10) # Wait before retry
-
+                print(f" Login attempt {main_attempt+1} failed: {e}")
+                self.random_wait(5, 10)
         return False
 
-    # ===========================
-    # Main task runner
+
     def check_notifications(self, page):
         """
         Ultra-robust notification scraper for Cursor/Discourse.
@@ -1917,16 +1384,21 @@ class HuggingFaceBot:
                     # Define last_block for later usage
                     last_block = post_blocks[-1]
                     
-                    # Repeat for the last speaker specifically
-                    last_author_el = last_block.query_selector('.username a, .names .username, .ipsType_break[href*="/profile/"], .main-avatar a')
-                    if last_author_el:
-                        aria_label = last_author_el.get_attribute('aria-label') or ""
-                        if 'profile' in aria_label.lower():
-                            last_speaker = aria_label.split("'s")[0].strip()
-                        else:
-                            last_speaker = last_author_el.inner_text().strip()
-                    else:
-                        last_speaker = "unknown"
+                    # --- ANTIGRAVITY COMPONENT 3: last_speaker Detection Fix ---
+                    # Enhanced extraction using data attributes and better selectors
+                    last_speaker = last_block.get_attribute('data-user-id') or                                    last_block.get_attribute('data-username')
+                    
+                    if not last_speaker:
+                        last_author_el = last_block.query_selector('.username a, .names .username, .ipsType_break[href*="/profile/"], .main-avatar a')
+                        if last_author_el:
+                            aria_label = last_author_el.get_attribute('aria-label') or ""
+                            if 'profile' in aria_label.lower():
+                                last_speaker = aria_label.split("'s")[0].strip()
+                            else:
+                                last_speaker = last_author_el.inner_text().strip()
+                    
+                    if not last_speaker: last_speaker = "unknown"
+                    print(f" [Antigravity] Detected Last speaker: '{last_speaker}'")
 
                     # Identify Original Poster (OP) - usually the first block
                     op_author_el = post_blocks[0].query_selector('.username a, .names .username, .ipsType_break[href*="/profile/"]')
@@ -2049,24 +1521,34 @@ class HuggingFaceBot:
                 self.random_wait(2, 3)
                 self.handle_overlays(page)
 
+                # --- ANTIGRAVITY COMPONENT 2: Reply Button Fix ---
+                # Strategy: Exclude per-post reply buttons to avoid confusion
+                print(" [Antigravity] Looking for MAIN topic reply button (excluding per-post buttons)...")
                 valid_reply_btn = None
-                possible_buttons = page.query_selector_all('button, a.btn')
-                # 1. Try to find the MAIN topic reply button first (at the bottom)
-                for btn in possible_buttons:
-                    if not btn.is_visible(): continue
-                    classes = btn.get_attribute('class') or ''
-                    text = btn.inner_text().strip().lower()
-                    if (text == 'reply' or text == 'post reply') and ('topic-footer-main-buttons' in classes or 'create' in classes):
+                
+                # 1. Target the footer buttons specifically
+                main_reply_selectors = [
+                    '.topic-footer-main-buttons button.create',
+                    '#topic-footer-buttons button.create',
+                    '.topic-footer-main-buttons .btn-primary',
+                    'button.btn-primary:has-text("Reply")',
+                    '#reply-control textarea' # If editor is already open
+                ]
+                
+                for sel in main_reply_selectors:
+                    btn = page.query_selector(sel)
+                    if btn and btn.is_visible():
                         valid_reply_btn = btn
-                        print(f" Found main topic reply button: {text}")
+                        print(f" [Antigravity] Found main reply target: {sel}")
                         break
                 
-                # 2. Fallback to any visible reply button if main one not found
                 if not valid_reply_btn:
-                    for btn in possible_buttons:
-                        if not btn.is_visible(): continue
-                        text = btn.inner_text().strip().lower()
-                        if text == 'reply' or text == 'post reply':
+                    # Fallback to general but filter out per-post ones
+                    all_btns = page.query_selector_all('button:has-text("Reply")')
+                    for btn in all_btns:
+                        parent_class = btn.evaluate("el => el.parentElement.className")
+                        # Per-post buttons usually have 'post-controls' or similar in parent
+                        if 'post-controls' not in parent_class and 'actions' not in parent_class:
                             valid_reply_btn = btn
                             break
                 

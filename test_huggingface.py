@@ -1,5 +1,6 @@
 import os
 import time
+import random
 from huggingface_bot import HuggingFaceBot
 
 def main():
@@ -20,7 +21,16 @@ def main():
     print("--- Forum Bot Started ---")
     print(f"Found {len(urls)} forums to process.")
     
+    # Shuffle URLs to avoid fixed pattern
+    random.shuffle(urls)
+    
     for url in urls:
+        # --- RANDOM SKIP LOGIC ---
+        # 30% chance to skip a forum entirely this run to mimic human randomness
+        if random.random() < 0.3:
+            print(f"\n [Randomness] Skipping {url} this session to mimic human behavior.")
+            continue
+            
         # Simple name extraction from URL
         name = url.split('//')[-1].split('/')[0].replace('www.', '')
         
@@ -36,10 +46,11 @@ def main():
             import traceback
             traceback.print_exc()
         
-        # Wait between forums
+        # Wait between forums (Randomized 1-3 minutes)
         if url != urls[-1]:
-            print(f"\nWaiting before next forum...")
-            time.sleep(30)
+            wait_time = random.randint(60, 180)
+            print(f"\nWaiting {wait_time}s before next forum...")
+            time.sleep(wait_time)
     
     print("\n" + "="*60)
     print("--- All tasks completed! ---")

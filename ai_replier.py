@@ -1,3 +1,5 @@
+import warnings
+warnings.filterwarnings("ignore", category=FutureWarning)
 from openai import OpenAI
 import warnings
 warnings.filterwarnings("ignore", category=FutureWarning, module="google.generativeai")

@@ -1,4 +1,6 @@
 from openai import OpenAI
+import warnings
+warnings.filterwarnings("ignore", category=FutureWarning, module="google.generativeai")
 import google.generativeai as genai
 import config
 from verifier import Verifier

@@ -1027,3 +1027,28 @@ Post ID: 132712
 URL: https://forum.gitlab.com/t/printing-markdown/132712
 Reply: Hey Pinter, if you want that exact look, the best way is to use the GitLab API `/markdown` endpoint to get your HTML first. Then, you can use a tool like `md-to-pdf` and just link GitLab's official [P...
 --------------------------------------------------
+[2026-02-12 01:19:07] https://forum.cursor.com/
+Post ID: 151627
+URL: https://forum.cursor.com/t/mac-dock-unread-badge-red-dot-is-tied-to-an-archived-agent-not-the-active-conversation/151627
+Reply: [ALREADY_REPLIED_DETECTED]...
+--------------------------------------------------
+[2026-02-12 01:19:22] https://forum.cursor.com/
+Post ID: 151626
+URL: https://forum.cursor.com/t/floating-review-buttons-gone/151626
+Reply: [ALREADY_REPLIED_DETECTED]...
+--------------------------------------------------
+[2026-02-12 01:19:30] https://forum.cursor.com/
+Post ID: 151516
+URL: https://forum.cursor.com/t/unable-to-discover-supabase-mcp-server/151516
+Reply: [SKIPPED_SOLVED]...
+--------------------------------------------------
+[2026-02-12 01:20:44] forum.cursor.com
+Post ID: 149857
+URL: https://forum.cursor.com/t/constant-oom-code-536870904-with-latest-update/149857
+Reply: Hey user376, been there. You can actually give the renderer more breathing room by launching Cursor with the `, max-old-space-size=8192` flag. This usually stops it from crashing during heavy lifts. I...
+--------------------------------------------------
+[2026-02-12 01:38:58] forum.gitlab.com
+Post ID: 124799
+URL: https://forum.gitlab.com/t/ci-cd-and-runner-not-creating-and-picking-up-jobs/124799
+Reply: Hey GreenZombie76, looks like the issue is that `sidekiq['enable'] = false` line in your `gitlab.rb`. Sidekiq is basically the engine that handles background stuff like processing push events and runn...
+--------------------------------------------------

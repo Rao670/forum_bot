@@ -1052,3 +1052,13 @@ Post ID: 124799
 URL: https://forum.gitlab.com/t/ci-cd-and-runner-not-creating-and-picking-up-jobs/124799
 Reply: Hey GreenZombie76, looks like the issue is that `sidekiq['enable'] = false` line in your `gitlab.rb`. Sidekiq is basically the engine that handles background stuff like processing push events and runn...
 --------------------------------------------------
+[2026-02-16 01:20:15] discourse.webflow.com
+Post ID: 250648
+URL: https://discourse.webflow.com/t/quick-task-building-simple-savings-calculator-with-js/250648/5
+Reply: Spot on @memetican. Keeping these threads clean makes it much easier for everyone to find the useful stuff. For anyone building a calculator in Webflow, using custom attributes and a single script for...
+--------------------------------------------------
+[2026-02-16 01:33:09] forum.gitlab.com
+Post ID: 132795
+URL: https://forum.gitlab.com/t/how-to-debug-an-mvn-deploy-with-a-bad-request-400-response/132795
+Reply: Hey MikaelJ, that 400 error usually happens when GitLab can't validate the auth header. Make sure your `settings.xml` is using a specific key like `Private-Token`, `Job-Token`, or `Deploy-Token` for t...
+--------------------------------------------------

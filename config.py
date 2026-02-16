@@ -21,6 +21,9 @@ else:
     # Default to empty list if no keys provided in environment
     GEMINI_API_KEYS = []
 
+# Backward compatibility for scripts that still expect a single key variable.
+GEMINI_API_KEY = GEMINI_API_KEYS[0] if GEMINI_API_KEYS else ""
+
 # Bot Settings
 USE_GEMINI = True   # Set to True to use Gemini
 USE_CEREBRAS = False# Set to True to use Cerebras (Fallback when Gemini fails)

@@ -1077,3 +1077,13 @@ Post ID: 331308
 URL: https://discourse.webflow.com/t/unexpected-intelimize-script-loading-not-in-custom-code-or-integrations/331308
 Reply: Hey memetican, good catch. You can verify the source in your Network tab. Just check the "Initiator" column to see if a native Webflow system file is triggering it. Also, look for an Optimize icon in ...
 --------------------------------------------------
+[2026-02-16 21:53:19] https://forum.cursor.com/
+Post ID: 152053
+URL: https://forum.cursor.com/t/bug-report-npm-task-detection-fails-to-parse-valid-package-json/152053
+Reply: [ALREADY_REPLIED_DETECTED]...
+--------------------------------------------------
+[2026-02-16 21:54:41] forum.cursor.com
+Post ID: 102782
+URL: https://forum.cursor.com/t/how-does-command-allowlist-denylist-really-work/102782
+Reply: Hey unknown, good catch. Right now the agent just uses prefix matching, so the best fix is to put dangerous subcommands like `pnpm install` right into the deny list. Since deny always overrides allow,...
+--------------------------------------------------

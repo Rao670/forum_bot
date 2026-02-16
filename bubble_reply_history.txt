@@ -1062,3 +1062,18 @@ Post ID: 132795
 URL: https://forum.gitlab.com/t/how-to-debug-an-mvn-deploy-with-a-bad-request-400-response/132795
 Reply: Hey MikaelJ, that 400 error usually happens when GitLab can't validate the auth header. Make sure your `settings.xml` is using a specific key like `Private-Token`, `Job-Token`, or `Deploy-Token` for t...
 --------------------------------------------------
+[2026-02-16 19:20:23] https://discourse.webflow.com/
+Post ID: 250648
+URL: https://discourse.webflow.com/t/quick-task-building-simple-savings-calculator-with-js/250648/5
+Reply: [ALREADY_REPLIED_DETECTED]...
+--------------------------------------------------
+[2026-02-16 19:20:37] https://discourse.webflow.com/
+Post ID: 252847
+URL: https://discourse.webflow.com/t/paypal-integration-to-webflow/252847/13
+Reply: [ALREADY_REPLIED_DETECTED]...
+--------------------------------------------------
+[2026-02-16 19:22:08] discourse.webflow.com
+Post ID: 331308
+URL: https://discourse.webflow.com/t/unexpected-intelimize-script-loading-not-in-custom-code-or-integrations/331308
+Reply: Hey memetican, good catch. You can verify the source in your Network tab. Just check the "Initiator" column to see if a native Webflow system file is triggering it. Also, look for an Optimize icon in ...
+--------------------------------------------------

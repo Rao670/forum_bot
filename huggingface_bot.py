@@ -703,6 +703,9 @@ class HuggingFaceBot:
                     '[data-role="userBar"]', '.ipsType_break[href*="/profile/"]',
                     'button:has-text("Create new project")', 'a[href*="/home/projects"]'
                 ]
+                
+                # FIX: Define Success Indicators for verification usage later
+                success_indicators = high_confidence_indicators + general_indicators
 
                 # Pre-login Check: Already logged in?
                 is_logged_in = False

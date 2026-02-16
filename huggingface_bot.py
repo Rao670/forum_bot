@@ -1497,10 +1497,14 @@ class HuggingFaceBot:
                 print(f" Using Proxy: {proxy_server}")
 
         with sync_playwright() as p:
+            # Auto-detect GitHub Actions environment
+            is_github_actions = os.getenv("GITHUB_ACTIONS") == "true" or os.getenv("CI") == "true"
+            print(f" [Environment] GitHub Actions: {is_github_actions}. {'Using Headless Mode.' if is_github_actions else 'Using Headed Mode (Laptop).'}")
+
             # Use Persistent Context to save cookies and session data (builds reputation)
             context = p.chromium.launch_persistent_context(
                 user_data_dir=user_data_dir,
-                headless=False,
+                headless=is_github_actions, # Auto-switch: True on GitHub, False on Laptop
                 proxy={"server": proxy_server} if proxy_server else None,
                 args=[
                     '--disable-blink-features=AutomationControlled',

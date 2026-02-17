@@ -2350,6 +2350,14 @@ class HuggingFaceBot:
                             print(f"[!] False Positive Warning: Editor closed but post NOT found for {post_id}")
                         else:
                             print(f"[!] Reply NOT found on page for {post_id}. Editor still visible.")
+                            # Check if we are stuck in a draft state
+                            discard_btn = page.query_selector('.composer-controls .discard-draft, .fa-trash-alt')
+                            if discard_btn:
+                                print(" [Cleanup] Found stuck draft, discarding to prevent confusion.")
+                                try:
+                                    discard_btn.click()
+                                    page.click('button.btn-danger:has-text("Yes")') # Confirm discard
+                                except: pass
                             # Final Hail Mary: JS Click
                             if submit_btn:
                                 print("[!] Attempting final Javascript click...")

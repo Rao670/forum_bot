@@ -99,7 +99,8 @@ class AIReplier:
             "modular.com": "Mojo/AI developer. Performance focus.",
             "zoom.us": "Zoom API developer. JWT/OAuth/SDK focus.",
             "unity.com": "Unity Game Developer. C# and objects/scripts.",
-            "bubble.io": "Bubble.io developer. Workflows, Data Types focus."
+            "bubble.io": "Bubble.io developer. Workflows, Data Types focus.",
+            "gitlab.com": "GitLab CI/CD and DevSecOps expert. Focus on .gitlab-ci.yml, runners, and security features."
         }
         
         context_instruction = "You are a helpful forum member."
@@ -122,12 +123,12 @@ class AIReplier:
         CONTEXT: {context_info}
         
         RULES:
-        - NEVER CLAIM CREDIT: Do NOT use "We" or "I fixed it" unless you are reporting your OWN code action (unlikely). Use "The team fixed it", "It looks like a fix was merged", or "The official solution is...".
-        - IMPROVE, DON'T REPEAT: Look at previous replies. Do NOT repeat what has already been suggested. Only add extra value, a new perspective, or a simplified practical summary.
-        - If unsure, return [SKIP].
-        - No fluff, no robotic intros. 
-        - Max 2-3 sentences of pure value.
-        - Name MUST match '{target_speaker}'.
+        - NO REPETITION: If the solution is already in the thread, return [SKIP].
+        - ADD UNIQUE VALUE: Only reply if you have a specific code snippet, a command, or a technical detail not yet mentioned.
+        - BE ULTRA-CONCISE: Max 1-2 sentences. No fluff, no "Hi", no "Thanks", no "Good catch".
+        - NO BOT PHRASES: Avoid "Based on the context", "It seems that", "I recommend", "I suggest". Talk like a blunt, busy engineer.
+        - NEVER CLAIM CREDIT: Do NOT use "We" or "I fixed it". Use "Check the docs for", "Try running", or "This usually happens when...".
+        - If the thread is an announcement, a thank you, or already solved, return [SKIP].
         
         Draft Jawab (Technical focus):
         """
@@ -144,13 +145,11 @@ class AIReplier:
         Target User: "{target_speaker}"
         
         HUMANIZATION RULES:
-        - Vary sentence length.
-        - Use simple, direct language.
-        - Add a short natural greeting if appropriate (e.g. "Good catch [Name]!" or "That makes sense..."). 
-        - DO NOT use "Oh, I see what you mean" or "I understand your point" - these sound like a bot.
-        - REMOVE any "As an AI", "In conclusion", or "I hope this helps".
-        - Do NOT use long hyphens/em-dashes (—) or double hyphens (--). Use commas or periods instead.
-        - Do NOT change the technical meaning or code.
+        - NO GREETINGS: Do not start with "Hi", "Hey", or "Good catch". Just jump into the value.
+        - NO ROBOTIC FILLERS: Absolutely no "I understand", "It seems", "Based on...".
+        - CASUAL TONE: Use lowercase occasionally or slightly informal grammar (e.g., "try checking..." instead of "I recommend that you check...").
+        - SHORT & BLUNT: Developers on forums are often brief. One clear sentence is better than three polite ones.
+        - REMOVE ALL AI-ISMS: "As an AI", "I hope this helps", "In conclusion", "Happy coding".
         
         Humanized Reply:
         """

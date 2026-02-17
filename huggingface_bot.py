@@ -1600,6 +1600,7 @@ class HuggingFaceBot:
 
             # Step 6: Deep Topic Discovery (Recursive navigation)
             def get_posts_from_page(page, base_url):
+                # Check for announcement/pinned markers to skip them
                 post_selectors = [
                     'a.topic-title',           # Discourse
                     'a[href*="/t/"]',           # Discourse
@@ -1633,6 +1634,14 @@ class HuggingFaceBot:
                                 if any(x in full_url.lower() for x in ['/forum/', '/c/', 'viewforum.php', 'forumdisplay.php']):
                                     # Even if matched by a selector, if it has category markers, ignore it as a post
                                     if not any(x in full_url.lower() for x in ['/topic/', '/t/', 'viewtopic.php', 'showthread.php']):
+                                        continue
+                                
+                                # Skip pinned or announcement threads if possible
+                                parent_item = el.evaluate_handle("el => el.closest('.topic-list-item')")
+                                if parent_item:
+                                    is_pinned = parent_item.as_element().query_selector('.pinned, .announcement, .fa-thumbtack')
+                                    if is_pinned:
+                                        print(f" [Skipping] Pinned/Announcement thread: {full_url}")
                                         continue
 
                                 post_id = self.extract_post_id(full_url)

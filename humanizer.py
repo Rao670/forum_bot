@@ -25,7 +25,15 @@ class Humanizer:
             r"here is the solution",
             r"oh, i see what you mean",
             r"i understand your point",
-            r"i see what you're saying"
+            r"i see what you're saying",
+            r"good catch",
+            r"that makes sense",
+            r"it seems that",
+            r"based on the context",
+            r"happy coding",
+            r"feel free to",
+            r"i recommend",
+            r"you might want to"
         ]
         
         cleaned = text

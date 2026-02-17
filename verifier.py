@@ -33,13 +33,12 @@ class Verifier:
         history_text = "\n".join(thread_history).lower()
         
         # 1. Quick rule-based check
-        resolved_keywords = ["thanks", "it worked", "solved", "fixed it", "resolved", "thank you", "perfect"]
-        # Only check the last 2 messages for "thanks" to be sure
-        last_messages = "\n".join(thread_history[-2:]).lower()
+        resolved_keywords = ["thanks", "it worked", "solved", "fixed it", "resolved", "thank you", "perfect", "appreciated", "cheers", "awesome"]
+        # Check last 3 messages for resolution
+        last_messages = "\n".join(thread_history[-3:]).lower()
         
         for kw in resolved_keywords:
             if kw in last_messages:
-                # We'll let the AI confirm this in the next stage
                 return True
                 
         return False

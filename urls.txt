@@ -1,2 +1,4 @@
 https://forum.cursor.com/
 
+https://forum.gitlab.com/
+https://discourse.webflow.com/

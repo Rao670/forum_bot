@@ -1087,3 +1087,8 @@ Post ID: 102782
 URL: https://forum.cursor.com/t/how-does-command-allowlist-denylist-really-work/102782
 Reply: Hey unknown, good catch. Right now the agent just uses prefix matching, so the best fix is to put dangerous subcommands like `pnpm install` right into the deny list. Since deny always overrides allow,...
 --------------------------------------------------
+[2026-02-17 01:21:10] forum.cursor.com
+Post ID: 151334
+URL: https://forum.cursor.com/t/memory-leak-probably/151334
+Reply: Hey f00z, the team actually just pushed some fixes for those memory leaks in the Agent and Composer. Updating to the latest version and using a `.cursorignore` file to trim down your codebase should h...
+--------------------------------------------------

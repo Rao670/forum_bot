@@ -1092,3 +1092,13 @@ Post ID: 151334
 URL: https://forum.cursor.com/t/memory-leak-probably/151334
 Reply: Hey f00z, the team actually just pushed some fixes for those memory leaks in the Agent and Composer. Updating to the latest version and using a `.cursorignore` file to trim down your codebase should h...
 --------------------------------------------------
+[2026-02-19 01:20:34] https://forum.gitlab.com/
+Post ID: 132637
+URL: https://forum.gitlab.com/t/gitlab-duo-external-agent-missing-ui-option-and-configuration-questions/132637/4
+Reply: [ALREADY_REPLIED_DETECTED]...
+--------------------------------------------------
+[2026-02-19 01:22:50] forum.gitlab.com
+Post ID: 132271
+URL: https://forum.gitlab.com/t/gitlab-in-ha-with-get-gitlab-environment-toolkit/132271
+Reply: bump `postgres_retries` and `postgres_delay` in your ansible vars to handle slow db startup. for anything outside GCP/AWS/Azure, you’ll need to use GET’s `static` inventory module to define your node ...
+--------------------------------------------------

@@ -1102,3 +1102,28 @@ Post ID: 132271
 URL: https://forum.gitlab.com/t/gitlab-in-ha-with-get-gitlab-environment-toolkit/132271
 Reply: bump `postgres_retries` and `postgres_delay` in your ansible vars to handle slow db startup. for anything outside GCP/AWS/Azure, you’ll need to use GET’s `static` inventory module to define your node ...
 --------------------------------------------------
+[2026-02-20 01:20:30] https://forum.gitlab.com/
+Post ID: 132637
+URL: https://forum.gitlab.com/t/gitlab-duo-external-agent-missing-ui-option-and-configuration-questions/132637/4
+Reply: [ALREADY_REPLIED_DETECTED]...
+--------------------------------------------------
+[2026-02-20 01:20:48] https://forum.gitlab.com/
+Post ID: 49933
+URL: https://forum.gitlab.com/t/welcome-to-gitlab-university/49933
+Reply: [SKIPPED_AI_VERIFICATION_FAILED]...
+--------------------------------------------------
+[2026-02-20 01:21:02] https://forum.gitlab.com/
+Post ID: 49932
+URL: https://forum.gitlab.com/t/about-the-gitlab-university-category/49932
+Reply: [ALREADY_REPLIED_DETECTED]...
+--------------------------------------------------
+[2026-02-20 01:21:10] https://forum.gitlab.com/
+Post ID: 132591
+URL: https://forum.gitlab.com/t/is-this-an-ui-problem/132591/2
+Reply: [SKIPPED_SOLVED]...
+--------------------------------------------------
+[2026-02-20 01:22:04] forum.gitlab.com
+Post ID: 131291
+URL: https://forum.gitlab.com/t/unable-to-access-team-ops-practitioner-course/131291
+Reply: university.gitlab.com is deprecated now, head over to [GitLab Learn](https://learn.gitlab.com) for the current CI/CD and security modules....
+--------------------------------------------------

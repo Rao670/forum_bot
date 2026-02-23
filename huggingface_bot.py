@@ -1516,7 +1516,7 @@ class HuggingFaceBot:
                     '--disable-setuid-sandbox',
                     '--disable-infobars',
                     '--window-position=0,0',
-                    '--ignore-certifcate-errors',
+                    '--ignore-certificate-errors',
                     '--no-first-run',
                     '--disable-save-password-bubble',
                     '--password-store=basic',
@@ -2379,5 +2379,4 @@ class HuggingFaceBot:
                 
             context.close()
             print(f"[DONE] Finished processing {platform_name}")
-
 
